@@ -5,7 +5,8 @@ from fastapi.testclient import TestClient
 def test_register_new_user(client: TestClient):
     r = client.post("/auth/register", data={
         "nom": "Dupont", "prenom": "Jean",
-        "email": "jean@test.fr", "password": "Pass1234!"
+        "email": "jean@test.fr", "password": "Pass1234!",
+        "password_confirm": "Pass1234!"
     })
     assert r.status_code == 302
     assert "/auth/login" in r.headers["location"]
@@ -14,7 +15,26 @@ def test_register_new_user(client: TestClient):
 def test_register_duplicate_email(client: TestClient, client_user):
     r = client.post("/auth/register", data={
         "nom": "X", "prenom": "Y",
-        "email": "client@test.fr", "password": "Pass1234!"
+        "email": "client@test.fr", "password": "Pass1234!",
+        "password_confirm": "Pass1234!"
+    })
+    assert r.status_code == 400
+
+
+def test_register_password_mismatch(client: TestClient):
+    r = client.post("/auth/register", data={
+        "nom": "X", "prenom": "Y",
+        "email": "x@test.fr", "password": "Pass1234!",
+        "password_confirm": "AutrePass1!"
+    })
+    assert r.status_code == 400
+
+
+def test_register_weak_password(client: TestClient):
+    r = client.post("/auth/register", data={
+        "nom": "X", "prenom": "Y",
+        "email": "x@test.fr", "password": "faible",
+        "password_confirm": "faible"
     })
     assert r.status_code == 400
 

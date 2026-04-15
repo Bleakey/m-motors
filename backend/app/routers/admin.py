@@ -23,14 +23,22 @@ async def dashboard(
     db: Session = Depends(get_db),
     admin: models.User = Depends(require_admin)
 ):
+    def count_status(s):
+        return db.query(models.Dossier).filter(models.Dossier.status == s).count()
+
     return templates.TemplateResponse("admin/dashboard.html", {
         "request": request, "user": admin,
         "total_vehicles": db.query(models.Vehicle).count(),
         "total_clients":  db.query(models.User)
                             .filter(models.User.role == "client").count(),
         "total_dossiers": db.query(models.Dossier).count(),
-        "pending":        db.query(models.Dossier)
-                            .filter(models.Dossier.status == "en_attente").count(),
+        "pending":        count_status("en_attente"),
+        "stats": {
+            "en_attente": count_status("en_attente"),
+            "en_cours":   count_status("en_cours"),
+            "valide":     count_status("valide"),
+            "refuse":     count_status("refuse"),
+        }
     })
 
 
@@ -102,6 +110,20 @@ async def toggle_type(
         models.VehicleType.both:     models.VehicleType.achat,
     }
     v.type = mapping[v.type]
+    db.commit()
+    return RedirectResponse(url="/admin/vehicles", status_code=302)
+
+
+@router.post("/vehicles/{vid}/disponible")
+async def toggle_disponible(
+    vid: int,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(require_admin)
+):
+    v = db.query(models.Vehicle).filter(models.Vehicle.id == vid).first()
+    if not v:
+        raise HTTPException(status_code=404)
+    v.disponible = not v.disponible
     db.commit()
     return RedirectResponse(url="/admin/vehicles", status_code=302)
 

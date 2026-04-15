@@ -23,8 +23,8 @@
 ## Installation
 
 ### Prérequis
-- Python 3.11+
-- MySQL 8.0 (ou Docker)
+- Python
+- MySQL (ou Docker)
 
 ### 1. Cloner le projet
 
@@ -64,25 +64,13 @@ Démarre MySQL et l'application en un seul commande.
 
 ## Tests
 
-```bash
 cd backend
 pytest -v
-```
 
-Les tests utilisent une base SQLite en mémoire — aucune configuration supplémentaire requise.
-
-```
-34 tests  ·  auth / vehicles / dossiers / admin
-```
+(34 tests  ·  auth / vehicles / dossiers / admin)
 
 ---
 
 ## Branches
 
-| Branche | Rôle |
-|---|---|
-| `main` | Code en production |
-| `develop` | Branche d'intégration |
-| `test` | CI/CD et tests d'intégration |
-| `feature/*` | Développement par user story |
-| `hotfix/*` | Correctifs urgents sur production |
+![alt text](image.png)

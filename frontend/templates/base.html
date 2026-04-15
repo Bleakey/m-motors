@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <title>{% block title %}M-Motors{% endblock %}</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f5f5f5; color: #222; }
+    nav  { background: #1a1a2e; color: white; padding: 12px 24px;
+           display: flex; gap: 16px; align-items: center; }
+    nav a { color: #ccc; text-decoration: none; }
+    nav a:hover { color: white; }
+    nav .brand { font-weight: bold; font-size: 1.2rem; color: white; margin-right: auto; }
+    main { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 10px 12px; border: 1px solid #ddd; text-align: left; }
+    th { background: #eee; }
+    .btn { display: inline-block; padding: 8px 16px; border-radius: 4px;
+           cursor: pointer; border: none; font-size: .9rem; text-decoration: none; }
+    .btn-primary  { background: #1a56db; color: white; }
+    .btn-danger   { background: #e74c3c; color: white; }
+    .btn-secondary{ background: #6c757d; color: white; }
+    .btn-sm       { padding: 4px 10px; font-size: .8rem; }
+    form { display: flex; flex-direction: column; gap: 10px; }
+    input, select, textarea {
+      padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; }
+    label { font-size: .9rem; font-weight: 600; }
+    .alert-error   { background: #fde8e8; border: 1px solid #e74c3c;
+                     color: #c0392b; padding: 10px; border-radius: 4px; }
+    .alert-success { background: #e8f8f0; border: 1px solid #27ae60;
+                     color: #1e8449; padding: 10px; border-radius: 4px; }
+    .card { background: white; border: 1px solid #ddd; border-radius: 6px;
+            padding: 20px; margin-bottom: 16px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .stat   { background: white; border: 1px solid #ddd; border-radius: 6px;
+              padding: 20px; text-align: center; }
+    .stat h2 { font-size: 2rem; margin: 0; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px;
+             font-size: .75rem; font-weight: bold; }
+    .badge-achat    { background: #d1ecf1; color: #0c5460; }
+    .badge-location { background: #d4edda; color: #155724; }
+    .badge-both     { background: #fff3cd; color: #856404; }
+    .tag-attente  { color: #856404; }
+    .tag-valide   { color: #155724; }
+    .tag-refuse   { color: #721c24; }
+    .tag-en_cours { color: #0c5460; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">M-Motors</a>
+  <a href="/vehicles?type=achat">Acheter</a>
+  <a href="/vehicles?type=location">Louer</a>
+  {% if user %}
+    {% if user.role == 'admin' %}
+      <a href="/admin/dashboard">Admin</a>
+    {% else %}
+      <a href="/client/dashboard">Mon espace</a>
+    {% endif %}
+    <a href="/auth/logout">Déconnexion ({{ user.prenom }})</a>
+  {% else %}
+    <a href="/auth/login">Connexion</a>
+    <a href="/auth/register">Inscription</a>
+  {% endif %}
+</nav>
+<main>
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

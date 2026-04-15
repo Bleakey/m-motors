@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Dossier {{ dossier_type }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:600px">
+  <h2>Dossier de {{ dossier_type }} — {{ vehicle.marque }} {{ vehicle.modele }}</h2>
+  <p>Téléchargez vos documents (PDF, JPG ou PNG).</p>
+  <form method="POST" action="/dossiers/nouveau/{{ vehicle.id }}"
+        enctype="multipart/form-data">
+    <input type="hidden" name="dossier_type" value="{{ dossier_type }}"/>
+    <label>Pièce d'identité</label>
+    <input type="file" name="doc_identite" accept=".pdf,.jpg,.jpeg,.png" required/>
+    <label>Permis de conduire</label>
+    <input type="file" name="doc_permis" accept=".pdf,.jpg,.jpeg,.png" required/>
+    <label>Justificatif de domicile</label>
+    <input type="file" name="doc_justif_domicile" accept=".pdf,.jpg,.jpeg,.png" required/>
+    <label>Justificatif de revenus</label>
+    <input type="file" name="doc_justif_revenus" accept=".pdf,.jpg,.jpeg,.png" required/>
+    <button type="submit" class="btn btn-primary">Soumettre le dossier</button>
+  </form>
+</div>
+{% endblock %}

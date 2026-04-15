@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Admin — Dossiers{% endblock %}
+{% block content %}
+<h1>Gestion des dossiers</h1>
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>Client</th><th>Véhicule</th><th>Type</th>
+      <th>Statut</th><th>Documents</th><th>Date</th><th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in dossiers %}
+    <tr>
+      <td>{{ d.id }}</td>
+      <td>{{ d.client.nom }} {{ d.client.prenom }}<br/>
+          <small>{{ d.client.email }}</small></td>
+      <td>{{ d.vehicle.marque }} {{ d.vehicle.modele }}</td>
+      <td><span class="badge badge-{{ d.type }}">{{ d.type }}</span></td>
+      <td class="tag-{{ d.status }}"><strong>{{ d.status }}</strong></td>
+      <td>
+        {% if d.doc_identite %}
+          <a href="{{ d.doc_identite }}" target="_blank">ID</a>
+        {% endif %}
+        {% if d.doc_permis %}
+          | <a href="{{ d.doc_permis }}" target="_blank">Permis</a>
+        {% endif %}
+        {% if d.doc_justif_domicile %}
+          | <a href="{{ d.doc_justif_domicile }}" target="_blank">Domicile</a>
+        {% endif %}
+        {% if d.doc_justif_revenus %}
+          | <a href="{{ d.doc_justif_revenus }}" target="_blank">Revenus</a>
+        {% endif %}
+      </td>
+      <td>{{ d.created_at.strftime('%d/%m/%Y') }}</td>
+      <td>
+        <form method="POST" action="/admin/dossiers/{{ d.id }}/update">
+          <select name="status" style="width:auto">
+            <option value="en_attente" {% if d.status=='en_attente' %}selected{% endif %}>En attente</option>
+            <option value="en_cours"   {% if d.status=='en_cours'   %}selected{% endif %}>En cours</option>
+            <option value="valide"     {% if d.status=='valide'     %}selected{% endif %}>Validé</option>
+            <option value="refuse"     {% if d.status=='refuse'     %}selected{% endif %}>Refusé</option>
+          </select>
+          <input type="text" name="commentaire_admin" style="width:160px"
+                 placeholder="Commentaire..." value="{{ d.commentaire_admin or '' }}"/>
+          <button type="submit" class="btn btn-primary btn-sm">OK</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8">Aucun dossier.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

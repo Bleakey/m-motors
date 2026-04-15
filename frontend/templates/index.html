@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}M-Motors — Accueil{% endblock %}
+{% block content %}
+<h1>Bienvenue sur M-Motors</h1>
+<p>Spécialiste véhicules d'occasion depuis 1987 — achat et location longue durée.</p>
+
+<div style="margin: 16px 0; display: flex; gap: 12px;">
+  <a href="/vehicles?type=achat"    class="btn btn-primary">Voir les véhicules à l'achat</a>
+  <a href="/vehicles?type=location" class="btn btn-secondary">Voir les véhicules en location</a>
+</div>
+
+<h2>Véhicules disponibles</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Véhicule</th><th>Année</th><th>Km</th>
+      <th>Prix achat</th><th>Location/mois</th><th>Type</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in featured %}
+    <tr>
+      <td><strong>{{ v.marque }} {{ v.modele }}</strong></td>
+      <td>{{ v.annee }}</td>
+      <td>{{ v.kilometrage }}</td>
+      <td>{% if v.prix_achat %}{{ v.prix_achat }} €{% else %}—{% endif %}</td>
+      <td>{% if v.prix_location_mensuel %}{{ v.prix_location_mensuel }} €{% else %}—{% endif %}</td>
+      <td>
+        <span class="badge badge-{{ v.type }}">{{ v.type }}</span>
+      </td>
+      <td><a href="/vehicles/{{ v.id }}" class="btn btn-primary btn-sm">Voir</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7">Aucun véhicule disponible pour le moment.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

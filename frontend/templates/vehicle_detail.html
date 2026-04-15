@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ vehicle.marque }} {{ vehicle.modele }}{% endblock %}
+{% block content %}
+<a href="/vehicles">&larr; Retour</a>
+<div class="card" style="margin-top:16px">
+  <h1>{{ vehicle.marque }} {{ vehicle.modele }}
+    <span class="badge badge-{{ vehicle.type }}">{{ vehicle.type }}</span>
+  </h1>
+  <table style="width:auto; margin:16px 0;">
+    <tr><th>Année</th><td>{{ vehicle.annee }}</td></tr>
+    <tr><th>Kilométrage</th><td>{{ vehicle.kilometrage }} km</td></tr>
+    <tr><th>Carburant</th><td>{{ vehicle.carburant or '—' }}</td></tr>
+    <tr><th>Transmission</th><td>{{ vehicle.transmission or '—' }}</td></tr>
+    <tr><th>Couleur</th><td>{{ vehicle.couleur or '—' }}</td></tr>
+    {% if vehicle.prix_achat %}
+    <tr><th>Prix achat</th><td><strong>{{ vehicle.prix_achat }} €</strong></td></tr>
+    {% endif %}
+    {% if vehicle.prix_location_mensuel %}
+    <tr><th>Location / mois</th><td><strong>{{ vehicle.prix_location_mensuel }} €</strong></td></tr>
+    {% endif %}
+  </table>
+  {% if vehicle.description %}<p>{{ vehicle.description }}</p>{% endif %}
+
+  {% if user %}
+    <div style="display:flex; gap:12px; margin-top:16px;">
+      {% if vehicle.type in ['achat','both'] %}
+      <a href="/dossiers/nouveau/{{ vehicle.id }}?type=achat" class="btn btn-primary">
+        Déposer dossier achat
+      </a>
+      {% endif %}
+      {% if vehicle.type in ['location','both'] %}
+      <a href="/dossiers/nouveau/{{ vehicle.id }}?type=location" class="btn btn-secondary">
+        Déposer dossier location
+      </a>
+      {% endif %}
+    </div>
+  {% else %}
+  <p><a href="/auth/login">Connectez-vous</a> pour déposer un dossier.</p>
+  {% endif %}
+</div>
+{% endblock %}

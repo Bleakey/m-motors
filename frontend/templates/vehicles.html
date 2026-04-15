@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Véhicules{% endblock %}
+{% block content %}
+<h1>
+  {% if current_type == 'achat' %}Véhicules à l'achat
+  {% elif current_type == 'location' %}Location longue durée
+  {% else %}Tous les véhicules{% endif %}
+</h1>
+
+<form method="GET" action="/vehicles"
+      style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:16px;">
+  <div>
+    <label>Type</label>
+    <select name="type">
+      <option value="">Tous</option>
+      <option value="achat"    {% if current_type=='achat'    %}selected{% endif %}>Achat</option>
+      <option value="location" {% if current_type=='location' %}selected{% endif %}>Location</option>
+    </select>
+  </div>
+  <div>
+    <label>Marque</label>
+    <select name="marque">
+      <option value="">Toutes</option>
+      {% for m in marques %}
+      <option value="{{ m }}" {% if current_marque==m %}selected{% endif %}>{{ m }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>Prix max (€)</label>
+    <input type="number" name="prix_max" style="width:120px"
+           value="{{ current_prix_max or '' }}"/>
+  </div>
+  <button type="submit" class="btn btn-primary">Filtrer</button>
+  <a href="/vehicles" class="btn btn-secondary">Reset</a>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Véhicule</th><th>Année</th><th>Km</th>
+      <th>Prix achat</th><th>Location/mois</th>
+      <th>Carburant</th><th>Type</th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in vehicles %}
+    <tr>
+      <td><strong>{{ v.marque }} {{ v.modele }}</strong></td>
+      <td>{{ v.annee }}</td>
+      <td>{{ v.kilometrage }}</td>
+      <td>{% if v.prix_achat %}{{ v.prix_achat }} €{% else %}—{% endif %}</td>
+      <td>{% if v.prix_location_mensuel %}{{ v.prix_location_mensuel }} €{% else %}—{% endif %}</td>
+      <td>{{ v.carburant or '—' }}</td>
+      <td><span class="badge badge-{{ v.type }}">{{ v.type }}</span></td>
+      <td><a href="/vehicles/{{ v.id }}" class="btn btn-primary btn-sm">Voir</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8">Aucun véhicule trouvé.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

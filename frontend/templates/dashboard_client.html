@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Mon espace{% endblock %}
+{% block content %}
+<h1>Bienvenue {{ user.prenom }} {{ user.nom }}</h1>
+
+{% if request.query_params.get('submitted') %}
+<div class="alert-success">Dossier soumis avec succès. Nous reviendrons vers vous rapidement.</div>
+{% endif %}
+
+<h2>Mes dossiers</h2>
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>Véhicule</th><th>Type</th>
+      <th>Statut</th><th>Date</th><th>Commentaire admin</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in dossiers %}
+    <tr>
+      <td>{{ d.id }}</td>
+      <td>{{ d.vehicle.marque }} {{ d.vehicle.modele }}</td>
+      <td><span class="badge badge-{{ d.type }}">{{ d.type }}</span></td>
+      <td class="tag-{{ d.status }}"><strong>{{ d.status }}</strong></td>
+      <td>{{ d.created_at.strftime('%d/%m/%Y') }}</td>
+      <td>{{ d.commentaire_admin or '—' }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6">
+        Aucun dossier. <a href="/vehicles">Parcourir les véhicules</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

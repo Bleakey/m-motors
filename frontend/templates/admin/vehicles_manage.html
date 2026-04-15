@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Admin — Véhicules{% endblock %}
+{% block content %}
+<h1>Gestion des véhicules</h1>
+{% if request.query_params.get('added') %}
+<div class="alert-success">Véhicule ajouté.</div>
+{% endif %}
+
+<div class="card">
+  <h2>Ajouter un véhicule</h2>
+  <form method="POST" action="/admin/vehicles/add" enctype="multipart/form-data">
+    <div class="grid-2">
+      <div><label>Marque</label><input type="text" name="marque" required/></div>
+      <div><label>Modèle</label><input type="text" name="modele" required/></div>
+      <div><label>Année</label><input type="number" name="annee" required min="1990" max="2025"/></div>
+      <div><label>Kilométrage</label><input type="number" name="kilometrage" required/></div>
+      <div><label>Prix achat (€)</label><input type="number" name="prix_achat" step="0.01"/></div>
+      <div><label>Location/mois (€)</label><input type="number" name="prix_location_mensuel" step="0.01"/></div>
+      <div>
+        <label>Carburant</label>
+        <select name="carburant">
+          <option>Essence</option><option>Diesel</option>
+          <option>Électrique</option><option>Hybride</option>
+        </select>
+      </div>
+      <div>
+        <label>Transmission</label>
+        <select name="transmission">
+          <option>Manuelle</option><option>Automatique</option>
+        </select>
+      </div>
+      <div><label>Couleur</label><input type="text" name="couleur"/></div>
+      <div>
+        <label>Type</label>
+        <select name="type">
+          <option value="achat">Achat</option>
+          <option value="location">Location</option>
+          <option value="both">Achat & Location</option>
+        </select>
+      </div>
+    </div>
+    <label>Description</label>
+    <textarea name="description" rows="3"></textarea>
+    <label>Image</label>
+    <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp"/>
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+  </form>
+</div>
+
+<h2>Liste des véhicules</h2>
+<table>
+  <thead>
+    <tr>
+      <th>#</th><th>Véhicule</th><th>Année</th><th>Km</th>
+      <th>Prix achat</th><th>Location/mois</th><th>Type</th><th>Dispo</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in vehicles %}
+    <tr>
+      <td>{{ v.id }}</td>
+      <td><strong>{{ v.marque }} {{ v.modele }}</strong></td>
+      <td>{{ v.annee }}</td>
+      <td>{{ v.kilometrage }}</td>
+      <td>{% if v.prix_achat %}{{ v.prix_achat }} €{% else %}—{% endif %}</td>
+      <td>{% if v.prix_location_mensuel %}{{ v.prix_location_mensuel }} €{% else %}—{% endif %}</td>
+      <td><span class="badge badge-{{ v.type }}">{{ v.type }}</span></td>
+      <td>{{ '✅' if v.disponible else '❌' }}</td>
+      <td style="display:flex; gap:6px;">
+        <form method="POST" action="/admin/vehicles/{{ v.id }}/toggle">
+          <button class="btn btn-secondary btn-sm" title="Basculer type">↔</button>
+        </form>
+        <form method="POST" action="/admin/vehicles/{{ v.id }}/delete"
+              onsubmit="return confirm('Supprimer ?')">
+          <button class="btn btn-danger btn-sm">✕</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="9">Aucun véhicule.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

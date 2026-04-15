@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Admin — Dashboard{% endblock %}
+{% block content %}
+<h1>Dashboard Admin</h1>
+<div class="grid-4" style="margin: 16px 0;">
+  <div class="stat"><h2>{{ total_vehicles }}</h2><p>Véhicules</p></div>
+  <div class="stat"><h2>{{ total_clients }}</h2><p>Clients</p></div>
+  <div class="stat"><h2>{{ total_dossiers }}</h2><p>Dossiers</p></div>
+  <div class="stat"><h2>{{ pending }}</h2><p>En attente</p></div>
+</div>
+<div style="display:flex; gap:12px;">
+  <a href="/admin/vehicles" class="btn btn-primary">Gérer les véhicules</a>
+  <a href="/admin/dossiers" class="btn btn-secondary">Gérer les dossiers</a>
+</div>
+{% endblock %}

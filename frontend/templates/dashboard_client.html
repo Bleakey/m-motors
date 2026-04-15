@@ -19,7 +19,7 @@
     {% for d in dossiers %}
     <tr>
       <td>{{ d.id }}</td>
-      <td>{{ d.vehicle.marque }} {{ d.vehicle.modele }}</td>
+      <td><a href="/vehicles/{{ d.vehicle_id }}">{{ d.vehicle.marque }} {{ d.vehicle.modele }}</a></td>
       <td><span class="badge badge-{{ d.type }}">{{ d.type }}</span></td>
       <td class="tag-{{ d.status }}"><strong>{{ d.status }}</strong></td>
       <td>{{ d.created_at.strftime('%d/%m/%Y') }}</td>

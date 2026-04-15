@@ -5,9 +5,20 @@
 <div class="grid-4" style="margin: 16px 0;">
   <div class="stat"><h2>{{ total_vehicles }}</h2><p>Véhicules</p></div>
   <div class="stat"><h2>{{ total_clients }}</h2><p>Clients</p></div>
-  <div class="stat"><h2>{{ total_dossiers }}</h2><p>Dossiers</p></div>
-  <div class="stat"><h2>{{ pending }}</h2><p>En attente</p></div>
+  <div class="stat"><h2>{{ total_dossiers }}</h2><p>Dossiers total</p></div>
+  <div class="stat" style="border-left:4px solid #e67e22;">
+    <h2 style="color:#e67e22;">{{ pending }}</h2><p>En attente</p>
+  </div>
 </div>
+
+<h2 style="margin-top:24px;">Répartition des dossiers</h2>
+<div class="grid-4" style="margin-bottom:24px;">
+  <div class="stat"><h2 class="tag-attente">{{ stats.en_attente }}</h2><p>En attente</p></div>
+  <div class="stat"><h2 class="tag-en_cours">{{ stats.en_cours }}</h2><p>En cours</p></div>
+  <div class="stat"><h2 class="tag-valide">{{ stats.valide }}</h2><p>Validés</p></div>
+  <div class="stat"><h2 class="tag-refuse">{{ stats.refuse }}</h2><p>Refusés</p></div>
+</div>
+
 <div style="display:flex; gap:12px;">
   <a href="/admin/vehicles" class="btn btn-primary">Gérer les véhicules</a>
   <a href="/admin/dossiers" class="btn btn-secondary">Gérer les dossiers</a>

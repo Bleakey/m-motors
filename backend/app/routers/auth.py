@@ -61,13 +61,27 @@ async def register_page(request: Request):
 @router.post("/register")
 async def register(
     request: Request,
-    nom: str       = Form(...),
-    prenom: str    = Form(...),
-    email: str     = Form(...),
-    telephone: str = Form(""),
-    password: str  = Form(...),
-    db: Session    = Depends(get_db)
+    nom: str              = Form(...),
+    prenom: str           = Form(...),
+    email: str            = Form(...),
+    telephone: str        = Form(""),
+    password: str         = Form(...),
+    password_confirm: str = Form(...),
+    db: Session           = Depends(get_db)
 ):
+    import re
+    if password != password_confirm:
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "Les mots de passe ne correspondent pas"},
+            status_code=400
+        )
+    if len(password) < 8 or not re.search(r"\d", password):
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "Le mot de passe doit contenir au moins 8 caractères dont un chiffre"},
+            status_code=400
+        )
     if db.query(models.User).filter(models.User.email == email).first():
         return templates.TemplateResponse(
             "register.html",

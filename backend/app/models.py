@@ -78,7 +78,7 @@ class Vehicle(Base):
     disponible            = Column(Boolean, default=True)
     created_at            = Column(DateTime(timezone=True), server_default=func.now())
 
-    dossiers = relationship("Dossier", back_populates="vehicle")
+    dossiers = relationship("Dossier", back_populates="vehicle", cascade="all, delete-orphan")
 
 
 class Dossier(Base):

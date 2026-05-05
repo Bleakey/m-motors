@@ -2,8 +2,8 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mmotors
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-mmotors}
     ports:
       - "3306:3306"
     volumes:
@@ -22,10 +22,10 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: mysql+pymysql://root:root@db:3306/mmotors
-      SECRET_KEY: mmotors_secret_key_2024
-      ALGORITHM: HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: "60"
+      DATABASE_URL: ${DATABASE_URL:-mysql+pymysql://root:root@db:3306/mmotors}
+      SECRET_KEY: ${SECRET_KEY:-mmotors_secret_key_2024}
+      ALGORITHM: ${ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
       APP_BASE_DIR: /app
     volumes:
       - ./frontend:/app/frontend

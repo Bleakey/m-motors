@@ -1,5 +1,7 @@
 import os
-import uuid
+import io
+import cloudinary
+import cloudinary.uploader
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -9,11 +11,12 @@ from app.database import get_db
 from app import models
 from app.auth import require_auth
 
-from app.config import TEMPLATES, UPLOAD_DIR
+from app.config import TEMPLATES
 
 router    = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES))
 
+cloudinary.config(cloudinary_url=os.getenv("CLOUDINARY_URL"))
 
 ALLOWED_EXTENSIONS = {"pdf", "jpg", "jpeg", "png"}
 MAX_FILE_SIZE      = 5 * 1024 * 1024  # 5 Mo
@@ -32,12 +35,12 @@ async def _save_file(file: UploadFile, subfolder: str) -> str:
             status_code=400,
             detail=f"Fichier trop volumineux : {file.filename} (max 5 Mo)"
         )
-    dest = UPLOAD_DIR / subfolder
-    dest.mkdir(parents=True, exist_ok=True)
-    filename = f"{uuid.uuid4()}.{ext}"
-    with open(dest / filename, "wb") as f:
-        f.write(content)
-    return f"/static/uploads/{subfolder}/{filename}"
+    result = cloudinary.uploader.upload(
+        io.BytesIO(content),
+        folder=f"mmotors/{subfolder}",
+        resource_type="auto"
+    )
+    return result["secure_url"]
 
 
 @router.get("/nouveau/{vehicle_id}", response_class=HTMLResponse)

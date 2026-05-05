@@ -156,6 +156,20 @@ async def dossiers(
     })
 
 
+@router.post("/dossiers/{did}/delete")
+async def delete_dossier(
+    did: int,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(require_admin)
+):
+    d = db.query(models.Dossier).filter(models.Dossier.id == did).first()
+    if not d:
+        raise HTTPException(status_code=404)
+    db.delete(d)
+    db.commit()
+    return RedirectResponse(url="/admin/dossiers", status_code=302)
+
+
 @router.post("/dossiers/{did}/update")
 async def update_dossier(
     did: int,

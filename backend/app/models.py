@@ -12,16 +12,25 @@ class UserRole(str, enum.Enum):
     client = "client"
     admin  = "admin"
 
+    def __str__(self):
+        return self.value
+
 
 class VehicleType(str, enum.Enum):
     achat    = "achat"
     location = "location"
     both     = "both"
 
+    def __str__(self):
+        return self.value
+
 
 class DossierType(str, enum.Enum):
     achat    = "achat"
     location = "location"
+
+    def __str__(self):
+        return self.value
 
 
 class DossierStatus(str, enum.Enum):
@@ -29,6 +38,9 @@ class DossierStatus(str, enum.Enum):
     en_cours   = "en_cours"
     valide     = "valide"
     refuse     = "refuse"
+
+    def __str__(self):
+        return self.value
 
 
 class User(Base):

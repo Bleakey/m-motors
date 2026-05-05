@@ -3,7 +3,7 @@
 {% block content %}
 <div class="card" style="max-width:600px">
   <h2>Dossier de {{ dossier_type }} — {{ vehicle.marque }} {{ vehicle.modele }}</h2>
-  <p>Téléchargez vos documents (PDF, JPG ou PNG).</p>
+  <p>Téléchargez vos documents (PDF, JPG ou PNG — 5 Mo max par fichier).</p>
   <form method="POST" action="/dossiers/nouveau/{{ vehicle.id }}"
         enctype="multipart/form-data">
     <input type="hidden" name="dossier_type" value="{{ dossier_type }}"/>

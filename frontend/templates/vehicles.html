@@ -46,11 +46,17 @@
   <tbody>
     {% for v in vehicles %}
     <tr>
-      <td><strong>{{ v.marque }} {{ v.modele }}</strong></td>
+      <td>
+        {% if v.image_url %}
+        <img src="{{ v.image_url }}" alt="{{ v.marque }} {{ v.modele }}"
+             style="width:60px;height:45px;object-fit:cover;border-radius:3px;vertical-align:middle;margin-right:8px;"/>
+        {% endif %}
+        <strong>{{ v.marque }} {{ v.modele }}</strong>
+      </td>
       <td>{{ v.annee }}</td>
-      <td>{{ v.kilometrage }}</td>
-      <td>{% if v.prix_achat %}{{ v.prix_achat }} €{% else %}—{% endif %}</td>
-      <td>{% if v.prix_location_mensuel %}{{ v.prix_location_mensuel }} €{% else %}—{% endif %}</td>
+      <td>{{ "{:,}".format(v.kilometrage) }} km</td>
+      <td>{% if v.prix_achat %}{{ "{:,.0f}".format(v.prix_achat) }} €{% else %}—{% endif %}</td>
+      <td>{% if v.prix_location_mensuel %}{{ "{:,.0f}".format(v.prix_location_mensuel) }} €/mois{% else %}—{% endif %}</td>
       <td>{{ v.carburant or '—' }}</td>
       <td><span class="badge badge-{{ v.type }}">{{ v.type }}</span></td>
       <td><a href="/vehicles/{{ v.id }}" class="btn btn-primary btn-sm">Voir</a></td>

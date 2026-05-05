@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 {% block title %}{{ vehicle.marque }} {{ vehicle.modele }}{% endblock %}
 {% block content %}
-<a href="/vehicles">&larr; Retour</a>
+<a href="/vehicles">&larr; Retour au catalogue</a>
 <div class="card" style="margin-top:16px">
+  {% if vehicle.image_url %}
+  <img src="{{ vehicle.image_url }}" alt="{{ vehicle.marque }} {{ vehicle.modele }}"
+       style="width:100%;max-height:320px;object-fit:cover;border-radius:4px;margin-bottom:16px;"/>
+  {% endif %}
   <h1>{{ vehicle.marque }} {{ vehicle.modele }}
     <span class="badge badge-{{ vehicle.type }}">{{ vehicle.type }}</span>
   </h1>
   <table style="width:auto; margin:16px 0;">
     <tr><th>Année</th><td>{{ vehicle.annee }}</td></tr>
-    <tr><th>Kilométrage</th><td>{{ vehicle.kilometrage }} km</td></tr>
+    <tr><th>Kilométrage</th><td>{{ "{:,}".format(vehicle.kilometrage) }} km</td></tr>
     <tr><th>Carburant</th><td>{{ vehicle.carburant or '—' }}</td></tr>
     <tr><th>Transmission</th><td>{{ vehicle.transmission or '—' }}</td></tr>
     <tr><th>Couleur</th><td>{{ vehicle.couleur or '—' }}</td></tr>
     {% if vehicle.prix_achat %}
-    <tr><th>Prix achat</th><td><strong>{{ vehicle.prix_achat }} €</strong></td></tr>
+    <tr><th>Prix achat</th><td><strong>{{ "{:,.0f}".format(vehicle.prix_achat) }} €</strong></td></tr>
     {% endif %}
     {% if vehicle.prix_location_mensuel %}
-    <tr><th>Location / mois</th><td><strong>{{ vehicle.prix_location_mensuel }} €</strong></td></tr>
+    <tr><th>Location / mois</th><td><strong>{{ "{:,.0f}".format(vehicle.prix_location_mensuel) }} € / mois</strong></td></tr>
     {% endif %}
   </table>
   {% if vehicle.description %}<p>{{ vehicle.description }}</p>{% endif %}

@@ -15,13 +15,28 @@ router    = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES))
 
 
+ALLOWED_EXTENSIONS = {"pdf", "jpg", "jpeg", "png"}
+MAX_FILE_SIZE      = 5 * 1024 * 1024  # 5 Mo
+
+
 async def _save_file(file: UploadFile, subfolder: str) -> str:
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Format non autorisé : {file.filename}. Formats acceptés : PDF, JPG, PNG"
+        )
+    content = await file.read()
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Fichier trop volumineux : {file.filename} (max 5 Mo)"
+        )
     dest = UPLOAD_DIR / subfolder
     dest.mkdir(parents=True, exist_ok=True)
-    ext      = file.filename.rsplit(".", 1)[-1]
     filename = f"{uuid.uuid4()}.{ext}"
     with open(dest / filename, "wb") as f:
-        f.write(await file.read())
+        f.write(content)
     return f"/static/uploads/{subfolder}/{filename}"
 
 

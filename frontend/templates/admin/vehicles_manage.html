@@ -68,11 +68,16 @@
       <td>{{ '✅' if v.disponible else '❌' }}</td>
       <td style="display:flex; gap:6px;">
         <form method="POST" action="/admin/vehicles/{{ v.id }}/toggle">
-          <button class="btn btn-secondary btn-sm" title="Basculer type">↔</button>
+          <button class="btn btn-secondary btn-sm" title="Changer type">↔ Type</button>
+        </form>
+        <form method="POST" action="/admin/vehicles/{{ v.id }}/disponible">
+          <button class="btn btn-secondary btn-sm" title="Basculer disponibilité">
+            {{ '✅' if v.disponible else '❌' }} Dispo
+          </button>
         </form>
         <form method="POST" action="/admin/vehicles/{{ v.id }}/delete"
-              onsubmit="return confirm('Supprimer ?')">
-          <button class="btn btn-danger btn-sm">✕</button>
+              onsubmit="return confirm('Supprimer ce véhicule ?')">
+          <button class="btn btn-danger btn-sm">✕ Suppr.</button>
         </form>
       </td>
     </tr>

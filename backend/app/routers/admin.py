@@ -1,6 +1,10 @@
 import os
-import uuid
+import io
+import cloudinary
+import cloudinary.uploader
 from typing import Optional
+
+cloudinary.config(cloudinary_url=os.getenv("CLOUDINARY_URL"))
 
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -75,13 +79,13 @@ async def add_vehicle(
 ):
     image_url = None
     if image and image.filename:
-        dest = UPLOAD_DIR / "vehicles"
-        dest.mkdir(parents=True, exist_ok=True)
-        ext      = image.filename.rsplit(".", 1)[-1]
-        filename = f"{uuid.uuid4()}.{ext}"
-        with open(dest / filename, "wb") as f:
-            f.write(await image.read())
-        image_url = f"/static/uploads/vehicles/{filename}"
+        content = await image.read()
+        result = cloudinary.uploader.upload(
+            io.BytesIO(content),
+            folder="mmotors/vehicles",
+            resource_type="image"
+        )
+        image_url = result["secure_url"]
 
     db.add(models.Vehicle(
         marque=marque, modele=modele, annee=annee,

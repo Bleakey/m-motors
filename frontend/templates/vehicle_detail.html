@@ -10,6 +10,7 @@
   <h1>{{ vehicle.marque }} {{ vehicle.modele }}
     <span class="badge badge-{{ vehicle.type }}">{{ vehicle.type }}</span>
   </h1>
+  <div class="table-wrap">
   <table style="width:auto; margin:16px 0;">
     <tr><th>Année</th><td>{{ vehicle.annee }}</td></tr>
     <tr><th>Kilométrage</th><td>{{ "{:,}".format(vehicle.kilometrage) }} km</td></tr>
@@ -23,10 +24,11 @@
     <tr><th>Location / mois</th><td><strong>{{ "{:,.0f}".format(vehicle.prix_location_mensuel) }} € / mois</strong></td></tr>
     {% endif %}
   </table>
+  </div>
   {% if vehicle.description %}<p>{{ vehicle.description }}</p>{% endif %}
 
   {% if user %}
-    <div style="display:flex; gap:12px; margin-top:16px;">
+    <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
       {% if vehicle.type in ['achat','both'] %}
       <a href="/dossiers/nouveau/{{ vehicle.id }}?type=achat" class="btn btn-primary">
         Déposer dossier achat

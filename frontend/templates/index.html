@@ -4,12 +4,13 @@
 <h1>Bienvenue sur M-Motors</h1>
 <p>Achat et location longue durée.</p>
 
-<div style="margin: 16px 0; display: flex; gap: 12px;">
+<div style="margin: 16px 0; display: flex; gap: 12px; flex-wrap: wrap;">
   <a href="/vehicles?type=achat"    class="btn btn-primary">Voir les véhicules à l'achat</a>
   <a href="/vehicles?type=location" class="btn btn-secondary">Voir les véhicules en location</a>
 </div>
 
 <h2>Véhicules disponibles</h2>
+<div class="table-wrap">
 <table>
   <thead>
     <tr>
@@ -35,4 +36,5 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% endblock %}

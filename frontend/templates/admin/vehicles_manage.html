@@ -48,6 +48,7 @@
 </div>
 
 <h2>Liste des véhicules</h2>
+<div class="table-wrap">
 <table>
   <thead>
     <tr>
@@ -66,7 +67,7 @@
       <td>{% if v.prix_location_mensuel %}{{ v.prix_location_mensuel }} €{% else %}—{% endif %}</td>
       <td><span class="badge badge-{{ v.type }}">{{ v.type }}</span></td>
       <td>{{ '✅' if v.disponible else '❌' }}</td>
-      <td style="display:flex; gap:6px;">
+      <td style="display:flex; gap:6px; flex-wrap:wrap;">
         <form method="POST" action="/admin/vehicles/{{ v.id }}/toggle">
           <button class="btn btn-secondary btn-sm" title="Changer type">↔ Type</button>
         </form>
@@ -86,4 +87,5 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% endblock %}

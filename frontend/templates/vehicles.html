@@ -50,6 +50,7 @@
       <td>
         {% if v.image_url %}
         <img src="{{ v.image_url }}" alt="{{ v.marque }} {{ v.modele }}"
+             crossorigin="anonymous"
              style="width:60px;height:45px;object-fit:cover;border-radius:3px;vertical-align:middle;margin-right:8px;"/>
         {% endif %}
         <strong>{{ v.marque }} {{ v.modele }}</strong>

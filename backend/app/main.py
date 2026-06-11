@@ -60,8 +60,11 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "payment=(), usb=(), interest-cohort=()"
         )
         # Isolation contre les attaques type Spectre (cross-origin).
+        # Les images Cloudinary sont chargees en CORS (crossorigin="anonymous")
+        # pour rester compatibles avec require-corp.
         response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
         response.headers["Cross-Origin-Resource-Policy"] = "same-origin"
+        response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
         # Pas de mise en cache des pages HTML (souvent authentifiees / sensibles).
         # Les assets statiques (CSS, images) gardent leur cache par defaut.
         if response.headers.get("content-type", "").startswith("text/html"):

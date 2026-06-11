@@ -5,6 +5,7 @@
 <div class="card" style="margin-top:16px">
   {% if vehicle.image_url %}
   <img src="{{ vehicle.image_url }}" alt="{{ vehicle.marque }} {{ vehicle.modele }}"
+       crossorigin="anonymous"
        style="width:100%;max-height:320px;object-fit:cover;border-radius:4px;margin-bottom:16px;"/>
   {% endif %}
   <h1>{{ vehicle.marque }} {{ vehicle.modele }}

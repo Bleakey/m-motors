@@ -1,0 +1,4 @@
+# Dependances pour les tests de performance (Locust).
+# Separe de requirements.txt pour ne pas alourdir la CI / la prod.
+#   pip install -r requirements-perf.txt
+locust>=2.25,<3.0

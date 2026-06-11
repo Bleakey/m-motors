@@ -32,6 +32,17 @@ def setup_db():
     Base.metadata.drop_all(bind=engine)
 
 
+@pytest.fixture(autouse=True)
+def mock_cloudinary(monkeypatch):
+    """Evite tout appel reseau a Cloudinary pendant les tests."""
+    monkeypatch.setattr(
+        "cloudinary.uploader.upload",
+        lambda *args, **kwargs: {
+            "secure_url": "https://res.cloudinary.com/test/doc.pdf"
+        },
+    )
+
+
 @pytest.fixture
 def client():
     return TestClient(app, follow_redirects=False)

@@ -54,6 +54,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        # Pas de mise en cache des pages HTML (souvent authentifiees / sensibles).
+        # Les assets statiques (CSS, images) gardent leur cache par defaut.
+        if response.headers.get("content-type", "").startswith("text/html"):
+            response.headers["Cache-Control"] = "no-store"
         return response
 
 

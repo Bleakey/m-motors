@@ -9,6 +9,7 @@
 <div class="card">
   <h2>Ajouter un véhicule</h2>
   <form method="POST" action="/admin/vehicles/add" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
     <div class="grid-2">
       <div><label>Marque</label><input type="text" name="marque" required/></div>
       <div><label>Modèle</label><input type="text" name="modele" required/></div>
@@ -69,15 +70,18 @@
       <td>{{ '✅' if v.disponible else '❌' }}</td>
       <td style="display:flex; gap:6px; flex-wrap:wrap;">
         <form method="POST" action="/admin/vehicles/{{ v.id }}/toggle">
+          <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
           <button class="btn btn-secondary btn-sm" title="Changer type">↔ Type</button>
         </form>
         <form method="POST" action="/admin/vehicles/{{ v.id }}/disponible">
+          <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
           <button class="btn btn-secondary btn-sm" title="Basculer disponibilité">
             {{ '✅' if v.disponible else '❌' }} Dispo
           </button>
         </form>
         <form method="POST" action="/admin/vehicles/{{ v.id }}/delete"
               onsubmit="return confirm('Supprimer ce véhicule ?')">
+          <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
           <button class="btn btn-danger btn-sm">✕ Suppr.</button>
         </form>
       </td>

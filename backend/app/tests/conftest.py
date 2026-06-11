@@ -7,6 +7,7 @@ from app.database import Base, get_db
 from app.main import app
 from app import models
 from app.auth import hash_password
+from app.csrf import verify_csrf
 
 
 TEST_DB_URL = "sqlite:///./test.db"
@@ -23,6 +24,9 @@ def override_get_db():
 
 
 app.dependency_overrides[get_db] = override_get_db
+# Les tests existants ne gerent pas le jeton CSRF : on neutralise la
+# verification ici. La vraie protection est testee dans test_csrf.py.
+app.dependency_overrides[verify_csrf] = lambda: None
 
 
 @pytest.fixture(autouse=True)
@@ -45,7 +49,8 @@ def mock_cloudinary(monkeypatch):
 
 @pytest.fixture
 def client():
-    return TestClient(app, follow_redirects=False)
+    # base_url en https pour que le cookie CSRF (secure) soit accepte.
+    return TestClient(app, base_url="https://testserver", follow_redirects=False)
 
 
 @pytest.fixture

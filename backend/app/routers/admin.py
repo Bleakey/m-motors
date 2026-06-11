@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models
 from app.auth import require_admin
+from app.csrf import verify_csrf
 
 from app.config import TEMPLATES, UPLOAD_DIR
 
@@ -75,7 +76,8 @@ async def add_vehicle(
     type: str             = Form(...),
     image: UploadFile     = File(None),
     db: Session = Depends(get_db),
-    admin: models.User = Depends(require_admin)
+    admin: models.User = Depends(require_admin),
+    _csrf: None = Depends(verify_csrf),
 ):
     image_url = None
     if image and image.filename:
@@ -103,7 +105,8 @@ async def add_vehicle(
 async def toggle_type(
     vid: int,
     db: Session = Depends(get_db),
-    admin: models.User = Depends(require_admin)
+    admin: models.User = Depends(require_admin),
+    _csrf: None = Depends(verify_csrf),
 ):
     v = db.query(models.Vehicle).filter(models.Vehicle.id == vid).first()
     if not v:
@@ -122,7 +125,8 @@ async def toggle_type(
 async def toggle_disponible(
     vid: int,
     db: Session = Depends(get_db),
-    admin: models.User = Depends(require_admin)
+    admin: models.User = Depends(require_admin),
+    _csrf: None = Depends(verify_csrf),
 ):
     v = db.query(models.Vehicle).filter(models.Vehicle.id == vid).first()
     if not v:
@@ -136,7 +140,8 @@ async def toggle_disponible(
 async def delete_vehicle(
     vid: int,
     db: Session = Depends(get_db),
-    admin: models.User = Depends(require_admin)
+    admin: models.User = Depends(require_admin),
+    _csrf: None = Depends(verify_csrf),
 ):
     v = db.query(models.Vehicle).filter(models.Vehicle.id == vid).first()
     if v:
@@ -164,7 +169,8 @@ async def dossiers(
 async def delete_dossier(
     did: int,
     db: Session = Depends(get_db),
-    admin: models.User = Depends(require_admin)
+    admin: models.User = Depends(require_admin),
+    _csrf: None = Depends(verify_csrf),
 ):
     d = db.query(models.Dossier).filter(models.Dossier.id == did).first()
     if not d:
@@ -180,7 +186,8 @@ async def update_dossier(
     status: str             = Form(...),
     commentaire_admin: str  = Form(""),
     db: Session = Depends(get_db),
-    admin: models.User = Depends(require_admin)
+    admin: models.User = Depends(require_admin),
+    _csrf: None = Depends(verify_csrf),
 ):
     d = db.query(models.Dossier).filter(models.Dossier.id == did).first()
     if not d:

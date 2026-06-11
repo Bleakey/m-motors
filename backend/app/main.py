@@ -14,6 +14,7 @@ from app import models
 from app.auth import hash_password, get_current_user
 from app.routers import auth, vehicles, dossiers, admin
 from app.config import TEMPLATES, STATIC_DIR, UPLOAD_DIR
+from app.csrf import generate_csrf_token, CSRF_COOKIE_NAME
 
 load_dotenv()
 
@@ -46,6 +47,10 @@ CSP = (
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
+        # Jeton CSRF (double-submit cookie) rendu disponible aux templates.
+        csrf_token = request.cookies.get(CSRF_COOKIE_NAME) or generate_csrf_token()
+        request.state.csrf_token = csrf_token
+
         response = await call_next(request)
         response.headers["Content-Security-Policy"] = CSP
         response.headers["Strict-Transport-Security"] = (
@@ -69,6 +74,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Les assets statiques (CSS, images) gardent leur cache par defaut.
         if response.headers.get("content-type", "").startswith("text/html"):
             response.headers["Cache-Control"] = "no-store"
+        # Depose le cookie CSRF s'il n'existe pas encore.
+        if CSRF_COOKIE_NAME not in request.cookies:
+            response.set_cookie(
+                CSRF_COOKIE_NAME, csrf_token,
+                samesite="lax", secure=True, httponly=True,
+            )
         return response
 
 

@@ -5,6 +5,7 @@
   <h2>Créer un compte</h2>
   {% if error %}<div class="alert-error">{{ error }}</div>{% endif %}
   <form method="POST" action="/auth/register">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
     <div class="grid-2">
       <div><label>Nom</label><input type="text" name="nom" required/></div>
       <div><label>Prénom</label><input type="text" name="prenom" required/></div>

@@ -2,6 +2,7 @@
 {% block title %}Admin — Dossiers{% endblock %}
 {% block content %}
 <h1>Gestion des dossiers</h1>
+<div class="table-wrap">
 <table>
   <thead>
     <tr>
@@ -35,6 +36,7 @@
       <td>{{ d.created_at.strftime('%d/%m/%Y') }}</td>
       <td>
         <form method="POST" action="/admin/dossiers/{{ d.id }}/update">
+          <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
           <select name="status" style="width:auto">
             <option value="en_attente" {% if d.status=='en_attente' %}selected{% endif %}>En attente</option>
             <option value="en_cours"   {% if d.status=='en_cours'   %}selected{% endif %}>En cours</option>
@@ -49,6 +51,7 @@
       <td>
         <form method="POST" action="/admin/dossiers/{{ d.id }}/delete"
               onsubmit="return confirm('Supprimer ce dossier ?')">
+          <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
           <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
         </form>
       </td>
@@ -58,4 +61,5 @@
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% endblock %}

@@ -8,6 +8,7 @@
   <div class="alert-success">Compte créé. Connectez-vous.</div>
   {% endif %}
   <form method="POST" action="/auth/login">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}"/>
     <label>Email</label>
     <input type="email" name="email" required/>
     <label>Mot de passe</label>

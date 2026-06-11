@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app import models
 from app.auth import require_auth
+from app.csrf import verify_csrf
 
 from app.config import TEMPLATES
 
@@ -72,7 +73,8 @@ async def submit_dossier(
     doc_justif_domicile: UploadFile = File(...),
     doc_justif_revenus: UploadFile  = File(...),
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(require_auth)
+    current_user: models.User = Depends(require_auth),
+    _csrf: None = Depends(verify_csrf),
 ):
     vehicle = db.query(models.Vehicle).filter(
         models.Vehicle.id == vehicle_id

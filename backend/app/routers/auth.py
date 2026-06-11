@@ -11,6 +11,7 @@ from app.auth import (
 )
 
 from app.config import TEMPLATES
+from app.csrf import verify_csrf
 
 router    = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES))
@@ -33,7 +34,8 @@ async def login(
     request: Request,
     email: str    = Form(...),
     password: str = Form(...),
-    db: Session   = Depends(get_db)
+    db: Session   = Depends(get_db),
+    _csrf: None   = Depends(verify_csrf),
 ):
     user = db.query(models.User).filter(models.User.email == email).first()
     if not user or not verify_password(password, user.hashed_password):
@@ -67,7 +69,8 @@ async def register(
     telephone: str        = Form(""),
     password: str         = Form(...),
     password_confirm: str = Form(...),
-    db: Session           = Depends(get_db)
+    db: Session           = Depends(get_db),
+    _csrf: None           = Depends(verify_csrf),
 ):
     import re
     if password != password_confirm:

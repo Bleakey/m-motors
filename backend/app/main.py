@@ -34,7 +34,7 @@ app = FastAPI(title="M-Motors", version="1.0.0")
 # refuse tout script externe (l'app n'utilise aucun <script>).
 CSP = (
     "default-src 'self'; "
-    "img-src 'self' data: https:; "
+    "img-src 'self' data: https://res.cloudinary.com; "
     "style-src 'self' 'unsafe-inline'; "
     "script-src 'self'; "
     "object-src 'none'; "
@@ -54,6 +54,14 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        # Restreint les fonctionnalites navigateur non utilisees par l'app.
+        response.headers["Permissions-Policy"] = (
+            "geolocation=(), camera=(), microphone=(), "
+            "payment=(), usb=(), interest-cohort=()"
+        )
+        # Isolation contre les attaques type Spectre (cross-origin).
+        response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+        response.headers["Cross-Origin-Resource-Policy"] = "same-origin"
         # Pas de mise en cache des pages HTML (souvent authentifiees / sensibles).
         # Les assets statiques (CSS, images) gardent leur cache par defaut.
         if response.headers.get("content-type", "").startswith("text/html"):
